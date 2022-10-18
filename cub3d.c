@@ -109,32 +109,34 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-void	map_parser(t_map *map, int fd)
+void	map_parser(t_progdata *p, int fd)
 {
 	char	*line;
 
-	map->map = malloc(sizeof(char *) * 1);
-	map->map[0] = NULL;
-	map->map_size = 0;
+	p->data = malloc(sizeof(char *) * 1);
+	p->data[0] = NULL;
+	p->size = 0;
 	line = get_next_line(fd);
 	while (line)
 	{
-		map->map = extend_tab(map->map, &map->map_size, line);
+		p->data = extend_tab(p->data, &p->size, line);
 		line = get_next_line(fd);
 	}
 }
 
 
-int	map_checker_types(t_map *map)
+int	map_checker_types(t_progdata *p)
 {
-	int	i;
+	int		i;
+	char	*new_line;
 
 	i = 0;
-	while (i < map->map_size && (*map->map[i] != '1' && *map->map[i] != '0' && *map->map[i] != ' '))
+	while (i < p->size && (*p->data[i] != '1' && *p->data[i] != '0'))
 	{
-		if (strncmp(map->map[i], "NO ", 3) && strncmp(map->map[i], "SO ", 3) \
-		&& strncmp(map->map[i], "WE ", 3) && strncmp(map->map[i], "EA ", 3) \
-		&& strncmp(map->map[i], "F ", 2) && strncmp(map->map[i], "C ", 2))
+		new_line = strchr(p->data[i], '\n');
+		if ((strncmp(p->data[i], "NO ", 3) && strncmp(p->data[i], "SO ", 3) \
+		&& strncmp(p->data[i], "WE ", 3) && strncmp(p->data[i], "EA ", 3) \
+		&& strncmp(p->data[i], "F ", 2) && strncmp(p->data[i], "C ", 2)) && !new_line)
 			return (0);
 		i++;
 	}
@@ -152,7 +154,7 @@ int	map_checker_types(t_map *map)
 
 int	main(int argc, char **argv)
 {
-	t_map	map;
+	t_progdata p_data;
 	int		fd;
 
 	if (argc == 2)
@@ -160,13 +162,13 @@ int	main(int argc, char **argv)
 		fd = open(argv[1], O_RDONLY);
 		if (fd == -1)
 			return (0);
-		map_parser(&map, fd);
-		int index = map_checker_types(&map);
-		char **test = dup_tab_from_index_nospace(map.map, map.map_size, index);
-		for (int i = 0; test[i]; i++)
-			printf("%s", test[i]);
-		// for (int i = 0; i < map.map_size; i++)
-		// 	printf("line[%d] size= %d, line = %s\n", i + 1, line_size_no_space(map.map[i]), dup_line_nospace(map.map[i]));
+		map_parser(&p_data, fd);
+		int index = map_checker_types(&p_data);
+		char **test = dup_tab_from_index_nospace(p_data.data, p_data.size, index);
+		// for (int i = 0; test[i]; i++)
+		// 	printf("%s", test[i]);
+		for (int i = 0; i < p_data.size; i++)
+			printf("%s", p_data.data[i]);
 		close(fd);
 	}
 	return (0);
