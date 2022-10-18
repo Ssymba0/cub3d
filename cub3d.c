@@ -2,6 +2,14 @@
 
 int	line_size_no_space(char *line);
 
+int	ft_isspace(char c)
+{
+	if (c == ' ' || c == '\t' || \
+	c == '\n' || c == '\v' || c == '\f' || c == '\r')
+		return (1);
+	return (0);
+}
+
 int	line_size_no_space(char *line)
 {
 	int	i;
@@ -124,21 +132,38 @@ void	map_parser(t_progdata *p, int fd)
 	}
 }
 
+char	*skip_whitespaces(char *s)
+{
+	int	i;
+
+	i = 0;
+	if (!s)
+		return (NULL);
+	while (s[i] && ft_isspace(s[i]))
+		i++;
+	return (s + i);
+}
 
 int	map_checker_types(t_progdata *p)
 {
 	int		i;
 	char	*new_line;
+	char	*no_sp;
 
 	i = 0;
-	while (i < p->size && (*p->data[i] != '1' && *p->data[i] != '0'))
+	p->t.tex_size = 0;
+	no_sp = skip_whitespaces(p->data[i]);
+	while (i < p->size && (*no_sp != '1' && *no_sp != '0'))
 	{
 		new_line = strchr(p->data[i], '\n');
-		if ((strncmp(p->data[i], "NO ", 3) && strncmp(p->data[i], "SO ", 3) \
-		&& strncmp(p->data[i], "WE ", 3) && strncmp(p->data[i], "EA ", 3) \
-		&& strncmp(p->data[i], "F ", 2) && strncmp(p->data[i], "C ", 2)) && !new_line)
+		if ((strncmp(no_sp, "NO ", 3) && strncmp(no_sp, "SO ", 3) \
+		&& strncmp(no_sp, "WE ", 3) && strncmp(no_sp, "EA ", 3) \
+		&& strncmp(no_sp, "F ", 2) && strncmp(no_sp, "C ", 2)) && !new_line)
 			return (0);
 		i++;
+		if (*no_sp)
+			p->t.tex_size++;
+		no_sp = skip_whitespaces(p->data[i]);
 	}
 	return (i);
 }
@@ -152,6 +177,66 @@ int	map_checker_types(t_progdata *p)
 	
 // }
 
+void	ft_bzero(void *p, int n)
+{
+	int	i;
+
+	i = 0;
+	while (i < n)
+	{
+		((char *)p)[i] = 0;
+		i++;
+	}
+}
+
+int	texture_errors(t_progdata *p)
+{
+	enum{NO, SO, WE, EA, F, C};
+	int	i;
+	char a[6];
+
+	ft_bzero(a, 6);
+	i = -1;
+	while (++i < p->t.tex_size)
+	{
+		if (!strncmp(p->data[i], "NO ", 3))
+			a[NO]++;
+		else if (!strncmp(p->data[i], "SO ", 3))
+			a[SO]++;
+		else if (!strncmp(p->data[i], "WE ", 3))
+			a[WE]++;
+		else if (!strncmp(p->data[i], "EA ", 3))
+			a[EA]++;
+		else if (!strncmp(p->data[i], "F ", 2))
+			a[F]++;
+		else if (!strncmp(p->data[i], "C ", 2))
+			a[C]++;
+	}
+	i = -1;
+	while (++i < 6)
+		if (a[i] > 1)
+			return (1);
+	return (0);
+}
+void	parse_textures(t_progdata *p, int size)
+{
+	int	i;
+	int	j;
+
+	p->t.text = (char **)malloc(sizeof(char *) * (p->t.tex_size + 1));
+	if (!p->t.text)
+		return ;
+	p->t.tex_size = size;
+	i = -1;
+	j = 0;
+	while (++i < size)
+	{
+		if (*skip_whitespaces(p->data[i]))
+			p->t.text[j++] = skip_whitespaces(p->data[i]);
+	}
+	p->t.text[j] = NULL;
+}
+
 int	main(int argc, char **argv)
 {
 	t_progdata p_data;
@@ -164,11 +249,19 @@ int	main(int argc, char **argv)
 			return (0);
 		map_parser(&p_data, fd);
 		int index = map_checker_types(&p_data);
+		parse_textures(&p_data, index);
+		for (int i = 0; i < p_data.t.tex_size; i++)
+			printf("%s\n", p_data.t.text[i]);
+		if (texture_errors(&p_data))
+		{
+			printf("Textures ERROR\n");
+			return (0);
+		}
 		char **test = dup_tab_from_index_nospace(p_data.data, p_data.size, index);
-		// for (int i = 0; test[i]; i++)
-		// 	printf("%s", test[i]);
-		for (int i = 0; i < p_data.size; i++)
-			printf("%s", p_data.data[i]);
+		for (int i = 0; test[i]; i++)
+			printf("%s", test[i]);
+		// for (int i = 0; i < p_data.size; i++)
+		// 	printf("%s", p_data.data[i]);
 		close(fd);
 	}
 	return (0);
