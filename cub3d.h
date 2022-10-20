@@ -17,6 +17,7 @@ typedef struct s_map
 {
 	char	**map;
 	int		map_size;
+	int		map_width;
 }	t_map;
 
 typedef struct	s_textures

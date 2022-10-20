@@ -2,12 +2,37 @@
 
 int	line_size_no_space(char *line);
 
+int	min(int a, int b)
+{
+	if (a < b)
+		return (a);
+	return (b);
+}
+
 int	ft_isspace(char c)
 {
 	if (c == ' ' || c == '\t' || \
 	c == '\n' || c == '\v' || c == '\f' || c == '\r')
 		return (1);
 	return (0);
+}
+
+char	*dup_no_newline(char *s)
+{
+	char	*dup;
+	int		i;
+
+	i = 0;
+	dup = malloc(sizeof(char) * (ft_strlen(s) + 1));
+	if (!dup)
+		return (NULL);
+	while (s[i] && s[i] != '\n')
+	{
+		dup[i] = s[i];
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
 }
 
 int	line_size_no_space(char *line)
@@ -90,7 +115,7 @@ char	**extend_tab(char **tab, int *size, char *elem)
 	i = -1;
 	while (++i < *size)
 		new[i] = tab[i];
-	new[i++] = elem;
+	new[i++] = dup_no_newline(elem);
 	new[i] = NULL;
 	(*size)++;
 	free(tab);
@@ -117,7 +142,7 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-void	map_parser(t_progdata *p, int fd)
+void	data_parser(t_progdata *p, int fd)
 {
 	char	*line;
 
@@ -147,7 +172,6 @@ char	*skip_whitespaces(char *s)
 int	map_checker_types(t_progdata *p)
 {
 	int		i;
-	char	*new_line;
 	char	*no_sp;
 
 	i = 0;
@@ -155,11 +179,10 @@ int	map_checker_types(t_progdata *p)
 	no_sp = skip_whitespaces(p->data[i]);
 	while (i < p->size && (*no_sp != '1' && *no_sp != '0'))
 	{
-		new_line = strchr(p->data[i], '\n');
-		if ((strncmp(no_sp, "NO ", 3) && strncmp(no_sp, "SO ", 3) \
-		&& strncmp(no_sp, "WE ", 3) && strncmp(no_sp, "EA ", 3) \
-		&& strncmp(no_sp, "F ", 2) && strncmp(no_sp, "C ", 2)) && !new_line)
-			return (0);
+		// if ((strncmp(no_sp, "NO ", 3) && strncmp(no_sp, "SO ", 3) \
+		// && strncmp(no_sp, "WE ", 3) && strncmp(no_sp, "EA ", 3) \
+		// && strncmp(no_sp, "F ", 2) && strncmp(no_sp, "C ", 2)) && *no_sp)
+		// 	return (0);
 		i++;
 		if (*no_sp)
 			p->t.tex_size++;
@@ -167,15 +190,6 @@ int	map_checker_types(t_progdata *p)
 	}
 	return (i);
 }
-
-// int	map_checker_map(t_map *map, int index)
-// {
-// 	int		i;
-// 	char	**map_nosp;
-
-// 	i = index;
-	
-// }
 
 void	ft_bzero(void *p, int n)
 {
@@ -199,25 +213,28 @@ int	texture_errors(t_progdata *p)
 	i = -1;
 	while (++i < p->t.tex_size)
 	{
-		if (!strncmp(p->data[i], "NO ", 3))
+		if (!strncmp(p->t.text[i], "NO ", 3))
 			a[NO]++;
-		else if (!strncmp(p->data[i], "SO ", 3))
+		else if (!strncmp(p->t.text[i], "SO ", 3))
 			a[SO]++;
-		else if (!strncmp(p->data[i], "WE ", 3))
+		else if (!strncmp(p->t.text[i], "WE ", 3))
 			a[WE]++;
-		else if (!strncmp(p->data[i], "EA ", 3))
+		else if (!strncmp(p->t.text[i], "EA ", 3))
 			a[EA]++;
-		else if (!strncmp(p->data[i], "F ", 2))
+		else if (!strncmp(p->t.text[i], "F ", 2))
 			a[F]++;
-		else if (!strncmp(p->data[i], "C ", 2))
+		else if (!strncmp(p->t.text[i], "C ", 2))
 			a[C]++;
 	}
 	i = -1;
 	while (++i < 6)
-		if (a[i] > 1)
+	{
+		if (a[i] != 1)
 			return (1);
+	}
 	return (0);
 }
+
 void	parse_textures(t_progdata *p, int size)
 {
 	int	i;
@@ -226,7 +243,6 @@ void	parse_textures(t_progdata *p, int size)
 	p->t.text = (char **)malloc(sizeof(char *) * (p->t.tex_size + 1));
 	if (!p->t.text)
 		return ;
-	p->t.tex_size = size;
 	i = -1;
 	j = 0;
 	while (++i < size)
@@ -235,6 +251,124 @@ void	parse_textures(t_progdata *p, int size)
 			p->t.text[j++] = skip_whitespaces(p->data[i]);
 	}
 	p->t.text[j] = NULL;
+	p->t.tex_size = j;
+}
+
+char	*dup_line_with_length(char *line, int length)
+{
+	char	*new;
+	int		i;
+
+	new = (char *)malloc(sizeof(char) * (length + 1));
+	if (!new)
+		return (NULL);
+	i = 0;
+	while (line[i])
+	{
+		new[i] = line[i];
+		i++;
+	}
+	while (i < length)
+	{
+		new[i] = ' ';
+		i++;
+	}
+	new[i] = '\0';
+	return (new);
+}
+
+void	parse_map(t_progdata *p, int start)
+{
+	int	i;
+	int	j;
+
+	p->m.map = (char **)malloc(sizeof(char *) * (p->size - start + 1));
+	if (!p->m.map)
+		return ;
+	i = start - 1;
+	j = 0;
+	while (++i < p->size)
+	{
+		p->m.map[j++] = dup_line_with_length(p->data[i], p->m.map_width);
+	}
+	p->m.map[j] = NULL;
+	p->m.map_size = j;
+}
+
+int	is_map_char(char c)
+{
+	if (c == '0' || c == '2' || c == 'N' || c == 'S' || c == 'W' \
+	|| c == 'E')
+		return (1);
+	return (0);
+}
+
+void	get_map_width(t_progdata *p, int start)
+{
+	int	i;
+
+	i = start;
+	while (i < p->size)
+	{
+		if (p->m.map_width < (int)ft_strlen(p->data[i]))
+			p->m.map_width = ft_strlen(p->data[i]);
+		i++;
+	}
+}
+
+int	valid_map(char **map, int size)
+{
+	char	*line;
+	char	*prev_line;
+	int		i;
+	int		j;
+
+	i = -1;
+	line = skip_whitespaces(map[0]);
+	while (line[++i])
+	{
+		if (line[i] != '1' && !ft_isspace(line[i]))
+			return (0);
+		// printf("one\n");
+	}
+	prev_line = line;
+	i = -1;
+	line = skip_whitespaces(map[size - 1]);
+	while (line[++i])
+	{
+		if (line[i] != '1' && !ft_isspace(line[i]))
+			return (0);
+		// printf("two\n");
+	}
+	i = 1;
+	while (i < size - 1)
+	{
+		line = skip_whitespaces(map[i]);
+		if (line[0] != '1' || line[strlen(line) - 1] != '1')
+			return (0);
+		printf("three\n");
+		j = 1;
+		while (line[j])
+		{
+			if (is_map_char(line[j]))
+			{
+				printf("line = %s\n   line[j] = %c\nline[j - 1] = %c line[j + 1] = %c prev_line[j] = %c next_line[j] = %c\n"\
+				,line, line[j], \
+				line[j - 1], \
+				line[j + 1], \
+				prev_line[j], \
+				skip_whitespaces(map[i + 1])[j]);
+				if (line[j - 1] == ' ' || line[j + 1] == ' ' \
+				|| prev_line[j] == ' ' || skip_whitespaces(map[i + 1])[j] == ' ')
+					return (0);
+				// printf("four\n");
+			}
+			j++;
+		}
+		i++;
+		prev_line = line;
+	}
+	return (1);
 }
 
 int	main(int argc, char **argv)
@@ -242,26 +376,31 @@ int	main(int argc, char **argv)
 	t_progdata p_data;
 	int		fd;
 
+	p_data.m.map_width = 0;
 	if (argc == 2)
 	{
 		fd = open(argv[1], O_RDONLY);
 		if (fd == -1)
 			return (0);
-		map_parser(&p_data, fd);
+		data_parser(&p_data, fd);
 		int index = map_checker_types(&p_data);
 		parse_textures(&p_data, index);
-		for (int i = 0; i < p_data.t.tex_size; i++)
-			printf("%s\n", p_data.t.text[i]);
+		// for (int i = 0; i < p_data.t.tex_size; i++)
+		// 	printf("%s\n", p_data.t.text[i]);
 		if (texture_errors(&p_data))
 		{
 			printf("Textures ERROR\n");
 			return (0);
 		}
-		char **test = dup_tab_from_index_nospace(p_data.data, p_data.size, index);
-		for (int i = 0; test[i]; i++)
-			printf("%s", test[i]);
-		// for (int i = 0; i < p_data.size; i++)
-		// 	printf("%s", p_data.data[i]);
+		get_map_width(&p_data, index);
+		parse_map(&p_data, index);
+		for (int i = 0; i < p_data.m.map_size; i++)
+			printf("%d :: %s\n", ft_strlen(p_data.m.map[i]), p_data.m.map[i]);
+		if (!valid_map(p_data.m.map, p_data.m.map_size))
+		{
+			printf("Map ERROR\n");
+			return (0);
+		}
 		close(fd);
 	}
 	return (0);
