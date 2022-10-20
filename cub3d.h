@@ -9,9 +9,6 @@
 # include <string.h>
 # include <mlx.h>
 # include "get_next_line.h"
-// remove this header
-# include <stdbool.h>
-// -----*
 
 typedef struct s_map
 {
@@ -34,5 +31,14 @@ typedef struct	s_progdata
 	t_textures	t;
 }	t_progdata;
 
+typedef struct	s_data {
+	void	*img;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+}				t_data;
+
+int	parsing(t_progdata *p_data, char **argv);
 
 #endif
