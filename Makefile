@@ -10,7 +10,8 @@ CFLAGS = -Wall -Wextra -Werror -I mlx #-fsanitize=address -g
 
 # Sources
 
-SRC = parsing.c get_next_line_utils.c cub3d.c draw.c img_utils.c
+SRC = parsing.c get_next_line_utils.c cub3d.c draw.c img_utils.c 2d_arr_utils.c\
+	str_utils.c
 
 # Objects
 
