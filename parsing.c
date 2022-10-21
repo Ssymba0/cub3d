@@ -6,7 +6,7 @@
 /*   By: isabri <isabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 15:58:04 by isabri            #+#    #+#             */
-/*   Updated: 2022/10/20 16:38:41 by isabri           ###   ########.fr       */
+/*   Updated: 2022/10/20 18:32:53 by isabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ char	**extend_tab(char **tab, int *size, char *elem)
 	while (++i < *size)
 		new[i] = tab[i];
 	new[i++] = dup_no_newline(elem);
+	free(elem);
 	new[i] = NULL;
 	(*size)++;
 	free(tab);

@@ -10,6 +10,14 @@
 # include <mlx.h>
 # include "get_next_line.h"
 
+typedef struct s_mlx
+{
+	void	*mlx;
+	void	*win;
+	int		width;
+	int		height;
+}	t_mlx;
+
 typedef struct s_map
 {
 	char	**map;
@@ -39,6 +47,17 @@ typedef struct	s_data {
 	int		endian;
 }				t_data;
 
-int	parsing(t_progdata *p_data, char **argv);
+typedef struct	s_imgs
+{
+	t_data	wall_img;
+	t_data	floor_img;
+	t_data	player_img;
+}				t_imgs;
+
+int		parsing(t_progdata *p_data, char **argv);
+void 	draw_map(t_mlx *m, t_imgs *imgs, t_progdata *p);
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void	create_imgs(t_imgs *imgs, t_mlx *m);
+void	init_mlx_struct(t_mlx *m, t_progdata *p);
 
 #endif

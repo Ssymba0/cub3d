@@ -6,11 +6,11 @@ CC = gcc
 
 # Flags
 
-CFLAGS = -Wall -Wextra -Werror -I mlx
+CFLAGS = -Wall -Wextra -Werror -I mlx #-fsanitize=address -g
 
 # Sources
 
-SRC = parsing.c get_next_line_utils.c cub3d.c
+SRC = parsing.c get_next_line_utils.c cub3d.c draw.c img_utils.c
 
 # Objects
 
