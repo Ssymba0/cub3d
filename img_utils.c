@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   img_utils.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: isabri <isabri@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/10/21 13:15:29 by isabri            #+#    #+#             */
+/*   Updated: 2022/10/21 13:15:30 by isabri           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 void	init_mlx_struct(t_mlx *m, t_progdata *p)
@@ -11,7 +23,8 @@ void	init_mlx_struct(t_mlx *m, t_progdata *p)
 void	init_img_data(t_data *data, t_mlx *m)
 {
 	data->img = mlx_new_image(m->mlx, m->width, m->height);
-	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
+	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, \
+	&data->line_length, &data->endian);
 }
 
 void	init_imgs(t_imgs *imgs, t_mlx *m)

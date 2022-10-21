@@ -6,134 +6,11 @@
 /*   By: isabri <isabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 15:58:04 by isabri            #+#    #+#             */
-/*   Updated: 2022/10/20 18:32:53 by isabri           ###   ########.fr       */
+/*   Updated: 2022/10/21 13:25:17 by isabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-int	line_size_no_space(char *line);
-
-int	min(int a, int b)
-{
-	if (a < b)
-		return (a);
-	return (b);
-}
-
-int	ft_isspace(char c)
-{
-	if (c == ' ' || c == '\t' || \
-	c == '\n' || c == '\v' || c == '\f' || c == '\r')
-		return (1);
-	return (0);
-}
-
-char	*dup_no_newline(char *s)
-{
-	char	*dup;
-	int		i;
-
-	i = 0;
-	dup = malloc(sizeof(char) * (ft_strlen(s) + 1));
-	if (!dup)
-		return (NULL);
-	while (s[i] && s[i] != '\n')
-	{
-		dup[i] = s[i];
-		i++;
-	}
-	dup[i] = '\0';
-	return (dup);
-}
-
-int	line_size_no_space(char *line)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (line[i])
-	{
-		if (line[i] != ' ')
-			j++;
-		i++;
-	}
-	return (j);
-}
-void	free_tab(char **tab, int size)
-{
-	int	i;
-
-	i = -1;
-	while (++i < size)
-		free(tab[i]);
-	free(tab);
-}
-
-char	*dup_line_replace_space(char *line)
-{
-	int		i;
-	int		j;
-	char	*new;
-
-	i = 0;
-	j = 0;
-	new = malloc(sizeof(char) * (ft_strlen(line) + 1));
-	if (!new)
-		return (NULL);
-	while (line[i])
-	{
-		if (line[i] == ' ')
-			new[j] = '1';
-		else
-			new[j] = line[i];
-		i++;
-		j++;
-	}
-	new[j] = '\0';
-	return (new);
-}
-
-char	**dup_tab_from_index_nospace(char **tab, int size, int index)
-{
-	char	**new;
-	int		i;
-	int		j;
-
-	i = index;
-	new = (char **)malloc(sizeof(char *) * ((size - index) + 1));
-	if (!new)
-		return (NULL);
-	j = 0;
-	while (i < size)
-	{
-		new[j++] = dup_line_replace_space(tab[i]);
-		i++;
-	}
-	new[j] = NULL;
-	return (new);
-}
-
-char	**extend_tab(char **tab, int *size, char *elem)
-{
-	char	**new;
-	int		i;
-
-	new = (char **)malloc(sizeof(char *) * (*size + 2));
-	if (!new)
-		return (NULL);
-	i = -1;
-	while (++i < *size)
-		new[i] = tab[i];
-	new[i++] = dup_no_newline(elem);
-	free(elem);
-	new[i] = NULL;
-	(*size)++;
-	free(tab);
-	return (new);
-}
 
 char	*get_next_line(int fd)
 {
@@ -170,18 +47,6 @@ void	data_parser(t_progdata *p, int fd)
 	}
 }
 
-char	*skip_whitespaces(char *s)
-{
-	int	i;
-
-	i = 0;
-	if (!s)
-		return (NULL);
-	while (s[i] && ft_isspace(s[i]))
-		i++;
-	return (s + i);
-}
-
 int	map_checker_types(t_progdata *p)
 {
 	int		i;
@@ -204,24 +69,12 @@ int	map_checker_types(t_progdata *p)
 	return (i);
 }
 
-void	ft_bzero(void *p, int n)
-{
-	int	i;
-
-	i = 0;
-	while (i < n)
-	{
-		((char *)p)[i] = 0;
-		i++;
-	}
-}
-
 int	texture_errors(t_progdata *p)
 {
-	enum{NO, SO, WE, EA, F, C};
-	int	i;
-	char a[6];
+	int		i;
+	char	a[6];
 
+	enum {NO, SO, WE, EA, F, C};
 	ft_bzero(a, 6);
 	i = -1;
 	while (++i < p->t.tex_size)
