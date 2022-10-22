@@ -6,7 +6,7 @@
 /*   By: isabri <isabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 09:12:02 by isabri            #+#    #+#             */
-/*   Updated: 2022/10/22 09:43:05 by isabri           ###   ########.fr       */
+/*   Updated: 2022/10/22 11:17:57 by isabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ typedef struct s_map
 	char	**map;
 	int		map_size;
 	int		map_width;
+	int		player_x;
+	int		player_y;
 }	t_map;
 
 typedef struct s_textures

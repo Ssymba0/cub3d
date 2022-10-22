@@ -6,7 +6,7 @@
 /*   By: isabri <isabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 13:28:14 by isabri            #+#    #+#             */
-/*   Updated: 2022/10/21 13:28:15 by isabri           ###   ########.fr       */
+/*   Updated: 2022/10/22 11:12:47 by isabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,16 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 int	is_player(char c)
 {
 	if (c == 'N' || c == 'S' || c == 'E' || c == 'W')
+	{
 		return (1);
+	}
 	return (0);
 }
 
 void	draw_map(t_mlx *m, t_imgs *imgs, t_progdata *p)
 {
-	int	i;
-	int	j;
+	int			i;
+	int			j;
 
 	i = 0;
 	while (i < p->m.map_size)

@@ -6,7 +6,7 @@
 /*   By: isabri <isabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 13:16:39 by isabri            #+#    #+#             */
-/*   Updated: 2022/10/22 09:29:23 by isabri           ###   ########.fr       */
+/*   Updated: 2022/10/22 12:21:55 by isabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ typedef struct s_imgs
 	t_data	wall_img;
 	t_data	floor_img;
 	t_data	player_img;
+	int		player_pixel_x;
+	int		player_pixel_y;
 }				t_imgs;
 
 int		parsing(t_progdata *p_data, char **argv);
@@ -60,5 +62,6 @@ char	**extend_tab(char **tab, int *size, char *elem);
 void	free_tab(char **tab, int size);
 char	*get_next_line(int fd);
 char	*dup_line_with_length(char *line, int length);
+int		is_player(char c);
 
 #endif

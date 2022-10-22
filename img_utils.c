@@ -6,7 +6,7 @@
 /*   By: isabri <isabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 13:15:29 by isabri            #+#    #+#             */
-/*   Updated: 2022/10/21 13:15:30 by isabri           ###   ########.fr       */
+/*   Updated: 2022/10/22 12:20:08 by isabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,12 @@ void	create_imgs(t_imgs *imgs, t_mlx *m)
 		{
 			my_mlx_pixel_put(&imgs->wall_img, i, j, 0x00FF0000);
 			my_mlx_pixel_put(&imgs->floor_img, i, j, 0x0000FF00);
-			if (i == 25 && j == 25)
+			if ((i == 25 && j == 25))
+			{
 				my_mlx_pixel_put(&imgs->player_img, i, j, 0x000000FF);
+				imgs->player_pixel_x = i;
+				imgs->player_pixel_y = j;
+			}
 			else
 				my_mlx_pixel_put(&imgs->player_img, i, j, 0x0000FF00);
 			j++;
