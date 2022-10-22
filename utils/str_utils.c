@@ -6,11 +6,11 @@
 /*   By: isabri <isabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 13:18:28 by isabri            #+#    #+#             */
-/*   Updated: 2022/10/21 13:23:52 by isabri           ###   ########.fr       */
+/*   Updated: 2022/10/22 09:08:29 by isabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "./include/str_utils.h"
 
 int	min(int a, int b)
 {

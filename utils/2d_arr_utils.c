@@ -6,11 +6,11 @@
 /*   By: isabri <isabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 13:25:01 by isabri            #+#    #+#             */
-/*   Updated: 2022/10/21 13:25:20 by isabri           ###   ########.fr       */
+/*   Updated: 2022/10/22 09:08:35 by isabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "./include/str_utils.h"
 
 void	free_tab(char **tab, int size)
 {

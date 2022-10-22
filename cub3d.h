@@ -6,7 +6,7 @@
 /*   By: isabri <isabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 13:16:39 by isabri            #+#    #+#             */
-/*   Updated: 2022/10/21 13:25:36 by isabri           ###   ########.fr       */
+/*   Updated: 2022/10/22 09:29:23 by isabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@
 # include <math.h>
 # include <string.h>
 # include <mlx.h>
-# include "get_next_line.h"
+# include "./utils/include/str_utils.h"
+# include "./parsing/include/parsing.h"
 
 typedef struct s_mlx
 {
@@ -29,27 +30,6 @@ typedef struct s_mlx
 	int		width;
 	int		height;
 }	t_mlx;
-
-typedef struct s_map
-{
-	char	**map;
-	int		map_size;
-	int		map_width;
-}	t_map;
-
-typedef struct s_textures
-{
-	char	**text;
-	int		tex_size;
-}	t_textures;
-
-typedef struct s_progdata
-{
-	char		**data;
-	int			size;
-	t_map		m;
-	t_textures	t;
-}	t_progdata;
 
 typedef struct s_data {
 	void	*img;
@@ -78,5 +58,7 @@ int		ft_isspace(char c);
 int		min(int a, int b);
 char	**extend_tab(char **tab, int *size, char *elem);
 void	free_tab(char **tab, int size);
+char	*get_next_line(int fd);
+char	*dup_line_with_length(char *line, int length);
 
 #endif

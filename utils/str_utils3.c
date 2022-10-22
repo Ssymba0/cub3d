@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   str_utils3.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: isabri <isabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 01:11:44 by isabri            #+#    #+#             */
-/*   Updated: 2022/10/20 09:57:36 by isabri           ###   ########.fr       */
+/*   Updated: 2022/10/22 09:07:56 by isabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "./include/str_utils.h"
 
 char	*ft_substr(char *s, unsigned int start, size_t len)
 {
